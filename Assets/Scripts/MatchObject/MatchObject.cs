@@ -10,19 +10,22 @@ public class MatchObject : MonoBehaviour
     [SerializeField] private MatcObjectSO matchObjectSO;
     [SerializeField] private TMP_Text matchObjectText;
     public float objectValue;
-    private Color objectColor;
+    private SpriteRenderer spriteRenderer;
 
     public List<MatchObject> MatchObjectsAround = new List<MatchObject>();
+    public CellController parentObject;
 
     private void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        parentObject = GetComponentInParent<CellController>();
         ChangeIdentity(matchObjectSO);
     }
 
     public void CheckMatchObjectsAround()
     {
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.1f);
-        
+
         MatchObjectsAround.Clear();
 
         foreach (var hit in hits)
@@ -41,8 +44,20 @@ public class MatchObject : MonoBehaviour
     {
         objectValue = matchObjectSo.matchObjectValue;
         matchObjectText.text = objectValue.ToString();
-        objectColor = matchObjectSo.matchObjectColor;
-        GetComponent<SpriteRenderer>().color = objectColor;
+        spriteRenderer.color = matchObjectSo.matchObjectColor;
+    }
+
+    public void ChangeIdentityVo(MatcObjectSO matchObjectSo)
+    {
+        StartCoroutine(ChangeIdentityCo(matchObjectSo));
+    }
+
+    IEnumerator ChangeIdentityCo(MatcObjectSO matchObjectSo)
+    {
+        yield return new WaitForSeconds(1.1f);
+        objectValue = matchObjectSo.matchObjectValue;
+        matchObjectText.text = objectValue.ToString();
+        spriteRenderer.color = matchObjectSo.matchObjectColor;
     }
 
     void OnDrawGizmos()

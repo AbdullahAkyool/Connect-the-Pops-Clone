@@ -45,6 +45,7 @@ public class MatchManager : MonoBehaviour
             if (Input.GetTouch(0).phase == TouchPhase.Ended)
             {
                 ClearSelection();
+                GridManager.Instance.FillEmptySpaces();
             }
         }
     }
@@ -92,14 +93,22 @@ public class MatchManager : MonoBehaviour
                 
                 if(matchObjects[i] == matchObjects[^1]) break;
                 
-                matchObject.transform.DOMove(matchObjects[^1].transform.position, 1f).OnComplete(() => {matchObject.gameObject.SetActive(false);});
+                matchObject.transform.parent = matchObjects[^1].transform.parent;
+                
+                matchObject.transform.DOMove(matchObjects[^1].transform.position, 1f).OnComplete(() =>
+                {
+                    //matchObject.gameObject.SetActive(false);
+                    matchObjects.Remove(matchObject.gameObject);
+                    Destroy(matchObject.gameObject);
+                });
             }
+            
 
             foreach (var mos in matchObjectSOS)
             {
                 if ((int)mos.matchObjectValue == (int)sum)
                 {
-                    matchObjects[^1].GetComponent<MatchObject>().ChangeIdentity(mos);                     
+                    matchObjects[^1].GetComponent<MatchObject>().ChangeIdentityVo(mos);                     
                 }
             }
             
@@ -136,11 +145,7 @@ public class MatchManager : MonoBehaviour
 
     private void SubtractionMatchObjects()
     {
-        int listCount = matchObjects.Count;
-        bool isPowerOfTwo = (listCount != 0) && ((listCount & (listCount - 1)) == 0);
-        var value = matchObjects[0].GetComponent<MatchObject>().objectValue;
-
-        if (listCount >= 2)
+        if (matchObjects.Count >= 2)
         {
             matchObjects.Remove(matchObjects[^1]);
             AdditionMatchObjects();

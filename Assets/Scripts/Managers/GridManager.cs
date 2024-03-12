@@ -12,8 +12,8 @@ public class GridManager : MonoBehaviour
 
     public int width = 8;
     public int height = 8;
-    public GameObject cellPrefab;
-    private GameObject[,] grid;
+    public CellController cellPrefab;
+    private CellController[,] grid;
     public Transform originPoint;
 
     private void Awake()
@@ -28,31 +28,30 @@ public class GridManager : MonoBehaviour
 
     private void CreateGrid()
     {
-        grid = new GameObject[width, height];
+        grid = new CellController[width, height];
 
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
                 Vector3 spawnPosition = new Vector3(originPoint.position.x + i, originPoint.position.y + j, 0);
-                GameObject cell = Instantiate(cellPrefab, spawnPosition, Quaternion.identity);
+                CellController newCell = Instantiate(cellPrefab, spawnPosition, Quaternion.identity);
 
-                cell.transform.parent = originPoint;
-                cell.name = "(" + i + "," + j + ")";
-                cell.transform.localPosition =
-                    new Vector3(cell.transform.localPosition.x, cell.transform.localPosition.y, 0);
+                newCell.transform.parent = originPoint;
+                newCell.name = "(" + i + "," + j + ")";
+                newCell.transform.localPosition = new Vector3(newCell.transform.localPosition.x, newCell.transform.localPosition.y, 0);
 
-                grid[i, j] = cell;
+                grid[i, j] = newCell;
             }
         }
     }
 
-    public void FillEmptySpaces()
+    public void CollapseEmptySpaces()
     {
-        StartCoroutine(FillEmptySpacesCo());
+        StartCoroutine(CollapseEmptySpacesCo());
     }
 
-    private IEnumerator FillEmptySpacesCo()
+    private IEnumerator CollapseEmptySpacesCo()
     {
         yield return new WaitForSeconds(1.1f);
 
@@ -97,7 +96,7 @@ public class GridManager : MonoBehaviour
             {
                 if (grid[x, y].transform.childCount == 0)
                 {
-                    grid[x, y].GetComponent<CellController>().Spawn(x, y);
+                    grid[x, y].Spawn(x, y);
                 }
             }
         }

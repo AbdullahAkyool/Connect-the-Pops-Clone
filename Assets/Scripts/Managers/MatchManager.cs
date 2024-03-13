@@ -54,6 +54,10 @@ public class MatchManager : MonoBehaviour
 
                     if (Input.GetTouch(0).phase == TouchPhase.Ended)
                     {
+                        foreach (var matchObj in matchObjects)
+                        {
+                            matchObj.DeleteLine();
+                        }
                         ClearSelection();
                         GridManager.Instance.CollapseEmptySpaces();
                         sum = 0;
@@ -75,9 +79,9 @@ public class MatchManager : MonoBehaviour
 
                 AdditionMatchObjects();
 
-                if (matchObjects.Count > 0)
+                if (matchObjects.Count > 1)
                 {
-                    matchObjects[^1].DrawLine(currentMatchObject);
+                    matchObjects[^2].DrawLine(currentMatchObject.gameObject);
                 }
             }
         }
@@ -88,6 +92,7 @@ public class MatchManager : MonoBehaviour
         if (matchObjects.Contains(currentMatchObject) && matchObjects.Count >= 2 && matchObjects[^1].MatchObjectsAround.Contains(currentMatchObject))
         {
             SubtractionMatchObjects();
+            matchObjects[^1].DeleteLine();
         }
     }
 
@@ -163,7 +168,7 @@ public class MatchManager : MonoBehaviour
         {
             if ((int)mos.matchObjectValue == (int)sum)
             {
-                targetMatchObject.ChangeIdentityVo(mos,time);
+                targetMatchObject.ChangeIdentity(mos,time);
             }
         }
     }

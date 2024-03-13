@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
-using Vector3 = System.Numerics.Vector3;
 
 public class MatchObject : MonoBehaviour
 {
@@ -13,16 +13,15 @@ public class MatchObject : MonoBehaviour
     [SerializeField] private TMP_Text matchObjectText;
     public float objectValue;
     private SpriteRenderer spriteRenderer;
-    public Color objectColor;
 
     [Header("Object Interaction")]
     public List<MatchObject> MatchObjectsAround = new List<MatchObject>();
-    [SerializeField] private LineRenderer objectLine;
+    public LineRenderer objectLine;
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        ChangeIdentityVo(matchObjectSO,0);
+        ChangeIdentity(matchObjectSO,0);
     }
 
     public void CheckMatchObjectsAround()
@@ -49,7 +48,7 @@ public class MatchObject : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, 1.1f);
     }
 
-    public void ChangeIdentityVo(MatcObjectSO matchObjectSo,float time)
+    public void ChangeIdentity(MatcObjectSO matchObjectSo,float time)
     {
         StartCoroutine(ChangeIdentityCo(matchObjectSo,time));
     }
@@ -57,19 +56,28 @@ public class MatchObject : MonoBehaviour
     IEnumerator ChangeIdentityCo(MatcObjectSO matchObjectSo,float time)
     {
         yield return new WaitForSeconds(time);
+        matchObjectSO = matchObjectSo;
         objectValue = matchObjectSo.matchObjectValue;
         matchObjectText.text = objectValue.ToString();
-        objectColor = matchObjectSo.matchObjectColor;
-        spriteRenderer.color = objectColor;
+        spriteRenderer.color = matchObjectSo.matchObjectColor;
     }
 
-    public void DrawLine(MatchObject targetObject)
+    public void DrawLine(GameObject targetObject)
     {
-        objectLine.material.color = targetObject.objectColor;
+        Vector3 targetPos = targetObject.transform.position;
+        Vector3 startPos = gameObject.transform.position;
+        
+        objectLine.material.color = matchObjectSO.matchObjectColor;
         
         objectLine.positionCount = 2;
-        objectLine.SetPosition(0,transform.localPosition);
-        objectLine.SetPosition(1,targetObject.transform.localPosition);
+
+        objectLine.SetPosition(0,startPos);
+        objectLine.SetPosition(1,targetPos);
+    }
+
+    public void DeleteLine()
+    {
+        objectLine.positionCount = 0;
     }
     
 }

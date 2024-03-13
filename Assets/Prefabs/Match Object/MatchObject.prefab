@@ -52,7 +52,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 0e4ef0a6a4c1168488b29130d171cca0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,7 +84,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.5069771
+        value: 0.17209244
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -158,7 +158,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 767912660129804408}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.47765037, y: 1.6215241, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -250,6 +250,7 @@ MonoBehaviour:
   matchObjectSO: {fileID: 0}
   matchObjectText: {fileID: 3787817782418104931}
   objectValue: 0
+  objectColor: {fileID: 2100000, guid: 0e4ef0a6a4c1168488b29130d171cca0, type: 2}
   MatchObjectsAround: []
   objectLine: {fileID: 4794939078880422865}
 --- !u!1 &1113648263162482306

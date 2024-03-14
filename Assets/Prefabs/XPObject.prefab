@@ -58,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: -326620591401800959, guid: 7c57679ec6e645e46b98541593fe4fd4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -104,8 +104,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 7c57679ec6e645e46b98541593fe4fd4, type: 2}
+  m_sharedMaterial: {fileID: -326620591401800959, guid: 7c57679ec6e645e46b98541593fe4fd4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -184,7 +184,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2762486800163231280}
   - component: {fileID: 2762486800163231283}
-  - component: {fileID: 2762486800163231281}
+  - component: {fileID: 6707237075628823496}
   m_Layer: 0
   m_Name: XPObject
   m_TagString: MatchObject
@@ -260,7 +260,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2762486800163231281
+--- !u!114 &6707237075628823496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -269,11 +269,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 2762486800163231285}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba984275158dfd74aa6ec65f395fff7b, type: 3}
+  m_Script: {fileID: 11500000, guid: 9a65dbb556b8b15408e817902b989165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchObjectSO: {fileID: 11400000, guid: bbf1da8b9387adc4c9039d430aed82bb, type: 2}
   matchObjectText: {fileID: 1760757171165905966}
   objectValue: 0
-  MatchObjectsAround: []
-  parentObject: {fileID: 0}

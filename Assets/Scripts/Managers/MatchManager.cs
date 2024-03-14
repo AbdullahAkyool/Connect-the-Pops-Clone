@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class MatchManager : MonoBehaviour
@@ -13,15 +15,17 @@ public class MatchManager : MonoBehaviour
     private RaycastHit2D hit;
 
     [SerializeField] private List<MatchObject> matchObjects = new List<MatchObject>();
-    [SerializeField] private MatchObject XPObject;
+    [SerializeField] private GameObject XPObject;
     [SerializeField] private MatchObject currentMatchObject;
     [SerializeField] private Camera cam;
     [SerializeField] private float sum;
     [SerializeField] private MatcObjectSO[] matchObjectSOS;
+    private MatcObjectSO currentMatcObjectSo;
 
     private void Awake()
     {
         Instance = this;
+        XPObject.SetActive(false);
     }
 
     void Update()
@@ -51,18 +55,24 @@ public class MatchManager : MonoBehaviour
                         CheckAndSelectObject();
                         CheckAndRemoveObjects();
                     }
-
-                    if (Input.GetTouch(0).phase == TouchPhase.Ended)
-                    {
-                        foreach (var matchObj in matchObjects)
-                        {
-                            matchObj.DeleteLine();
-                        }
-                        ClearSelection();
-                        GridManager.Instance.CollapseEmptySpaces();
-                        sum = 0;
-                    }
                 }
+            }
+            
+            if (Input.GetTouch(0).phase == TouchPhase.Ended)
+            {
+                currentMatchObject.ScaleEffect(.5f);
+                
+                foreach (var matchObj in matchObjects)
+                {
+                    matchObj.ScaleDown();
+                    matchObj.DeleteLine();
+                }
+                        
+                ClearSelection();
+                        
+                GridManager.Instance.CollapseEmptySpaces();
+                sum = 0;
+                XPObject.SetActive(false);
             }
         }
     }
@@ -73,10 +83,10 @@ public class MatchManager : MonoBehaviour
         {
             if (matchObjects.Count == 0 || matchObjects[^1].MatchObjectsAround.Contains(currentMatchObject))
             {
+                currentMatchObject.ScaleUp();
                 currentMatchObject.CheckMatchObjectsAround();
-                
                 matchObjects.Add(currentMatchObject);
-
+                
                 AdditionMatchObjects();
 
                 if (matchObjects.Count > 1)
@@ -91,6 +101,7 @@ public class MatchManager : MonoBehaviour
     {
         if (matchObjects.Contains(currentMatchObject) && matchObjects.Count >= 2 && matchObjects[^1].MatchObjectsAround.Contains(currentMatchObject))
         {
+            matchObjects[^1].ScaleDown();
             SubtractionMatchObjects();
             matchObjects[^1].DeleteLine();
         }
@@ -110,17 +121,20 @@ public class MatchManager : MonoBehaviour
 
                 matchObject.transform.parent = matchObjects[^1].transform.parent;
 
-                matchObject.transform.DOMove(matchObjects[^1].transform.position, 1f).OnComplete(() =>
+                Vector3 lastObjectPos = matchObjects[^1].transform.position;
+                
+                matchObject.transform.DOMove(new Vector3(lastObjectPos.x,lastObjectPos.y,lastObjectPos.z+1f), .5f).OnComplete(() =>
                 {
-                    //matchObject.gameObject.SetActive(false);
                     matchObjects.Remove(matchObject);
                     Destroy(matchObject.gameObject);
                 });
             }
 
-            ChangeTargetMatchObjectIdentity(matchObjects[^1],1.1f);
+            matchObjects[^1].ChangeIdentity(currentMatcObjectSo,.7f);
 
             matchObjects.Clear();
+            
+            ActionManager.Instance.OnProgressBarFilled?.Invoke(10);
         }
         else
         {
@@ -150,7 +164,9 @@ public class MatchManager : MonoBehaviour
             sum = value;
         }
         
-        ChangeTargetMatchObjectIdentity(XPObject,0);
+        XPObject.SetActive(true);
+        ChangeCurrentMatchObjectSo();
+        ActionManager.Instance.OnTotalMatchObjectIdentityChange?.Invoke(currentMatcObjectSo,0);
     }
 
     private void SubtractionMatchObjects()
@@ -162,14 +178,15 @@ public class MatchManager : MonoBehaviour
         }
     }
 
-    void ChangeTargetMatchObjectIdentity(MatchObject targetMatchObject, float time)
+    private void ChangeCurrentMatchObjectSo()
     {
         foreach (var mos in matchObjectSOS)
         {
             if ((int)mos.matchObjectValue == (int)sum)
             {
-                targetMatchObject.ChangeIdentity(mos,time);
+                currentMatcObjectSo = mos;
             }
         }
     }
+    
 }

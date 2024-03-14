@@ -53,7 +53,7 @@ public class GridManager : MonoBehaviour
 
     private IEnumerator CollapseEmptySpacesCo()
     {
-        yield return new WaitForSeconds(1.1f);
+        yield return new WaitForSeconds(.7f);
 
         for (int x = 0; x < width; x++)
         {
@@ -88,7 +88,7 @@ public class GridManager : MonoBehaviour
 
     IEnumerator SpawnAtEmptyCells()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(.85f);
 
         for (int x = 0; x < width; x++)
         {
@@ -96,7 +96,7 @@ public class GridManager : MonoBehaviour
             {
                 if (grid[x, y].transform.childCount == 0)
                 {
-                    grid[x, y].Spawn(x, y);
+                    grid[x, y].InitializeRandomMatchObject();
                 }
             }
         }

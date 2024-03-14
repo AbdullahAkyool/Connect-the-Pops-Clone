@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Object-16
   m_EditorClassIdentifier: 
   matchObjectValue: 16
-  matchObjectColor: {r: 0.7433963, g: 0.30089992, b: 0, a: 1}
+  matchObjectColor: {r: 0.88235295, g: 0.49019608, b: 0.21568628, a: 1}

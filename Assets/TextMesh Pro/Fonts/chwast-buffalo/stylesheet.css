@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'ChwastBuffalo-BlackCond';
+    src: url('ChwastBuffalo-BlackCond.eot');
+    src: local('ChwastBuffalo-BlackCond'),
+        url('ChwastBuffalo-BlackCond.eot?#iefix') format('embedded-opentype'),
+        url('ChwastBuffalo-BlackCond.woff2') format('woff2'),
+        url('ChwastBuffalo-BlackCond.woff') format('woff'),
+        url('ChwastBuffalo-BlackCond.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+

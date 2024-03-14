@@ -14,17 +14,11 @@ public class CellController : MonoBehaviour
         InitializeRandomMatchObject();
     }
 
-    private void InitializeRandomMatchObject()
+    public void InitializeRandomMatchObject()
     {
         int randomSpawnIndex = Random.Range(0, matchPrefabs.Length);
         var newMatchObject = Instantiate(matchPrefabs[randomSpawnIndex], transform.position, quaternion.identity);
         newMatchObject.transform.parent = this.transform;
-    }
-
-    public void Spawn(int a, int b)
-    {
-        //Debug.Log(a + " , " + b + " spawn");
-        
-        InitializeRandomMatchObject();
+        newMatchObject.ScaleEffect(0);
     }
 }

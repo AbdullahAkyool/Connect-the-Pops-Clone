@@ -6,22 +6,19 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class MatchObject : MonoBehaviour
+public class MatchObject : MatchObjectBase
 {
-    [Header("Object Identity")]
-    [SerializeField] private MatcObjectSO matchObjectSO;
-    [SerializeField] private TMP_Text matchObjectText;
-    public float objectValue;
-    private SpriteRenderer spriteRenderer;
-
+    public MatcObjectSO matchObjectSO;
     [Header("Object Interaction")]
+    private Vector3 orgScale;
     public List<MatchObject> MatchObjectsAround = new List<MatchObject>();
     public LineRenderer objectLine;
 
-    private void Start()
+    protected override void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        base.Start();
         ChangeIdentity(matchObjectSO,0);
+        orgScale = transform.localScale;
     }
 
     public void CheckMatchObjectsAround()
@@ -48,12 +45,7 @@ public class MatchObject : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, 1.1f);
     }
 
-    public void ChangeIdentity(MatcObjectSO matchObjectSo,float time)
-    {
-        StartCoroutine(ChangeIdentityCo(matchObjectSo,time));
-    }
-
-    IEnumerator ChangeIdentityCo(MatcObjectSO matchObjectSo,float time)
+    protected override IEnumerator ChangeIdentityCo(MatcObjectSO matchObjectSo, float time)
     {
         yield return new WaitForSeconds(time);
         matchObjectSO = matchObjectSo;
@@ -79,5 +71,30 @@ public class MatchObject : MonoBehaviour
     {
         objectLine.positionCount = 0;
     }
-    
+
+    public void ScaleUp()
+    {
+        transform.DOScale(Vector3.one*.92f,.2f);
+    }
+
+    public void ScaleDown()
+    {
+        transform.DOScale(orgScale, .2f);
+    }
+
+    public void ScaleEffect(float time)
+    {
+        StartCoroutine(ScaleEffectCo(time));
+    }
+
+    IEnumerator ScaleEffectCo(float time)
+    {
+        yield return new WaitForSeconds(time);
+        
+        transform.DOScale(Vector3.one*.92f,.2f).OnComplete((() =>
+        {
+            transform.DOScale(orgScale, .2f);
+
+        }));
+    }
 }

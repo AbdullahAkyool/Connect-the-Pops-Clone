@@ -17,6 +17,9 @@ public class CellController : MonoBehaviour
 
     public void InitializeRandomMatchObject()
     {
+        //Here, smaller numbers can be kept in the array for the start and larger numbers can be added to the array as the level progresses. 
+        //But for now, since it is in the test phase, all numbers are kept in the array
+        
         var randomSpawnIndex = Random.Range(0, matchObjectSos.Length);
         var newMatchObject = Instantiate(matchPrefab, transform.position, quaternion.identity);
         newMatchObject.ChangeIdentity(matchObjectSos[randomSpawnIndex], 0);

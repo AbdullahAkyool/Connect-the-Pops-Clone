@@ -10,12 +10,12 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
 
-    public int width = 8;
-    public int height = 8;
+    public int width;
+    public int height;
     public CellController cellPrefab;
     private CellController[,] grid;
     public Transform originPoint;
-
+    private MatchObject currentTopMatchObject;
     private void Awake()
     {
         Instance = this;
@@ -23,28 +23,54 @@ public class GridManager : MonoBehaviour
 
     private void Start()
     {
-        CreateGrid();
+        SpawnGrid();
     }
-
-    private void CreateGrid()
+    
+    private void SpawnGrid()
     {
         grid = new CellController[width, height];
+
+        float maxLength = 4f; //grid scale
+        
+        cellPrefab.transform.localScale = Vector3.one * (maxLength / width);
+        var space = cellPrefab.transform.localScale.x;
+        var offsetX = (width - 1) / 2f;
+        var offsetY = offsetX;
 
         for (int i = 0; i < width; i++)
         {
             for (int j = 0; j < height; j++)
             {
-                Vector3 spawnPosition = new Vector3(originPoint.position.x + i, originPoint.position.y + j, 0);
-                CellController newCell = Instantiate(cellPrefab, spawnPosition, Quaternion.identity);
-
-                newCell.transform.parent = originPoint;
+                var pos =originPoint.position + Vector3.up * (j - offsetX) * space + Vector3.right * (i - offsetY) * space;
+                var newCell = Instantiate(cellPrefab, transform);
                 newCell.name = "(" + i + "," + j + ")";
-                newCell.transform.localPosition = new Vector3(newCell.transform.localPosition.x, newCell.transform.localPosition.y, 0);
-
                 grid[i, j] = newCell;
+
+                newCell.transform.position = pos;
             }
         }
     }
+    
+
+    // private void CreateGrid()
+    // {
+    //     grid = new CellController[width, height];
+    //
+    //     for (int i = 0; i < width; i++)
+    //     {
+    //         for (int j = 0; j < height; j++)
+    //         {
+    //             Vector3 spawnPosition = new Vector3(originPoint.position.x + i, originPoint.position.y + j, 0);
+    //             CellController newCell = Instantiate(cellPrefab, spawnPosition, Quaternion.identity);
+    //
+    //             newCell.transform.parent = originPoint;
+    //             newCell.name = "(" + i + "," + j + ")";
+    //             newCell.transform.localPosition = new Vector3(newCell.transform.localPosition.x, newCell.transform.localPosition.y, 0);
+    //
+    //             grid[i, j] = newCell;
+    //         }
+    //     }
+    // }
 
     public void CollapseEmptySpaces()
     {
@@ -53,11 +79,11 @@ public class GridManager : MonoBehaviour
 
     private IEnumerator CollapseEmptySpacesCo()
     {
-        yield return new WaitForSeconds(.7f);
+        yield return new WaitForSeconds(.2f);
 
         for (int x = 0; x < width; x++)
         {
-            for (int y = height - 1; y >= 0; y--) // Gridin altından başlayarak yukarı doğru ilerleyin
+            for (int y = height - 1; y >= 0; y--) // scan the grid from the bottom to the top
             {
                 if (grid[x, y].transform.childCount == 0)
                 {
@@ -71,12 +97,13 @@ public class GridManager : MonoBehaviour
 
                             obj.parent = emptyCell.transform;
                             
-                            obj.DOMove(emptyCell.transform.position, .5f).OnComplete((() =>
+                            obj.DOMove(emptyCell.transform.position, .25f).OnComplete((() =>
                             {
                                 obj.localPosition = Vector3.zero;
+                                obj.GetComponent<MatchObject>().CollapseEffect();
                             }));
 
-                            emptyY++; // Bir sonraki boş hücreyi işaret edin
+                            emptyY++; //select next empty cell
                         }
                     }
                 }
@@ -88,7 +115,7 @@ public class GridManager : MonoBehaviour
 
     IEnumerator SpawnAtEmptyCells()
     {
-        yield return new WaitForSeconds(.85f);
+        yield return new WaitForSeconds(.21f);
 
         for (int x = 0; x < width; x++)
         {

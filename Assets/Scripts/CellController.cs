@@ -7,17 +7,19 @@ using Random = UnityEngine.Random;
 
 public class CellController : MonoBehaviour
 {
-    public MatchObject[] matchPrefabs;
+    public MatcObjectSO[] matchObjectSos;
+    public MatchObject matchPrefab;
 
-    void Start()
+    private void Start()
     {
         InitializeRandomMatchObject();
     }
 
     public void InitializeRandomMatchObject()
     {
-        int randomSpawnIndex = Random.Range(0, matchPrefabs.Length);
-        var newMatchObject = Instantiate(matchPrefabs[randomSpawnIndex], transform.position, quaternion.identity);
+        var randomSpawnIndex = Random.Range(0, matchObjectSos.Length);
+        var newMatchObject = Instantiate(matchPrefab, transform.position, quaternion.identity);
+        newMatchObject.ChangeIdentity(matchObjectSos[randomSpawnIndex], 0);
         newMatchObject.transform.parent = this.transform;
         newMatchObject.ScaleEffect(0);
     }

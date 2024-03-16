@@ -13,5 +13,5 @@ public class ActionManager : MonoBehaviour
 
     public Action<float> OnProgressBarFilled;
     public Action<MatcObjectSO,float> OnTotalMatchObjectIdentityChange;
-    public Action<MatcObjectSO,float> OnMatchObjectIdentityChange;
+    //public Action<MatchObjectSO,float> OnMatchObjectIdentityChange;
 }

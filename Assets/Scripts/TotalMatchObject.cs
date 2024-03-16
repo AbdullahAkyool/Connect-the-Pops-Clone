@@ -7,7 +7,6 @@ using DG.Tweening;
 
 public class TotalMatchObject : MatchObjectBase
 {
-
     protected override void Start()
     {
         base.Start();

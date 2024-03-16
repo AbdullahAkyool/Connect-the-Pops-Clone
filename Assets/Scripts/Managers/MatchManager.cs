@@ -21,6 +21,7 @@ public class MatchManager : MonoBehaviour
     [SerializeField] private float sum;
     [SerializeField] private MatcObjectSO[] matchObjectSOS;
     private MatcObjectSO currentMatcObjectSo;
+    public bool canSelect;
 
     private void Awake()
     {
@@ -30,6 +31,9 @@ public class MatchManager : MonoBehaviour
 
     void Update()
     {
+        
+        if(!canSelect) return;
+
         if (Input.touchCount > 0)
         {
             Vector3 touchPosition = Input.GetTouch(0).position;
@@ -38,7 +42,7 @@ public class MatchManager : MonoBehaviour
             hit = Physics2D.Raycast(rayPosition, Vector2.zero);
 
             Touch touch = Input.GetTouch(0);
-
+            
             if (hit.collider)
             {
                 if (hit.collider.gameObject.TryGetComponent(out MatchObject matchObject))
@@ -59,15 +63,7 @@ public class MatchManager : MonoBehaviour
             }
             
             if (Input.GetTouch(0).phase == TouchPhase.Ended)
-            {
-                currentMatchObject.ScaleEffect(.5f);
-                
-                foreach (var matchObj in matchObjects)
-                {
-                    matchObj.ScaleDown();
-                    matchObj.DeleteLine();
-                }
-                        
+            {      
                 ClearSelection();
                         
                 GridManager.Instance.CollapseEmptySpaces();
@@ -111,29 +107,28 @@ public class MatchManager : MonoBehaviour
     {
         if (matchObjects.Count >= 2)
         {
-            for (int i = 0; i < matchObjects.Count - 1; i++)
+            canSelect = false;
+            
+            for (int i = 0; i < matchObjects.Count; i++)
             {
                 var matchObject = matchObjects[i];
 
                 matchObject.MatchObjectsAround.Clear();
-
+                
+                matchObject.ScaleDown();
+                matchObject.DeleteLine();
+                
+                matchObjects[^1].ScaleEffect(.25f);
+                
                 if (matchObjects[i] == matchObjects[^1]) break;
 
                 matchObject.transform.parent = matchObjects[^1].transform.parent;
-
-                Vector3 lastObjectPos = matchObjects[^1].transform.position;
-                
-                matchObject.transform.DOMove(new Vector3(lastObjectPos.x,lastObjectPos.y,lastObjectPos.z+1f), .5f).OnComplete(() =>
-                {
-                    matchObjects.Remove(matchObject);
-                    Destroy(matchObject.gameObject);
-                });
+                var lastObjectPos = matchObjects[^1].transform.position;
+                matchObject.Move(lastObjectPos);
             }
 
-            matchObjects[^1].ChangeIdentity(currentMatcObjectSo,.7f);
-
+            matchObjects[^1].ChangeIdentity(currentMatcObjectSo,.2f);
             matchObjects.Clear();
-            
             ActionManager.Instance.OnProgressBarFilled?.Invoke(10);
         }
         else

@@ -2,23 +2,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using DG.Tweening.Core;
+using DG.Tweening.Plugins.Options;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class MatchObject : MatchObjectBase
 {
     public MatcObjectSO matchObjectSO;
-    [Header("Object Interaction")]
+    [Header("Object Interaction")] 
     private Vector3 orgScale;
+    private Vector3 collapseScale;
     public List<MatchObject> MatchObjectsAround = new List<MatchObject>();
     public LineRenderer objectLine;
-
+    private Collider2D matchObjectCollider;
     protected override void Start()
     {
         base.Start();
-        ChangeIdentity(matchObjectSO,0);
-        orgScale = transform.localScale;
+        orgScale = Vector3.one * .875f;
+        collapseScale = new Vector3(.875f,.7f,.875f);
+        matchObjectCollider = GetComponent<Collider2D>();
     }
 
     public void CheckMatchObjectsAround()
@@ -38,7 +41,7 @@ public class MatchObject : MatchObjectBase
             }
         }
     }
-    
+
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -58,13 +61,13 @@ public class MatchObject : MatchObjectBase
     {
         Vector3 targetPos = targetObject.transform.position;
         Vector3 startPos = gameObject.transform.position;
-        
+
         objectLine.material.color = matchObjectSO.matchObjectColor;
-        
+
         objectLine.positionCount = 2;
 
-        objectLine.SetPosition(0,startPos);
-        objectLine.SetPosition(1,targetPos);
+        objectLine.SetPosition(0, startPos);
+        objectLine.SetPosition(1, targetPos);
     }
 
     public void DeleteLine()
@@ -74,7 +77,7 @@ public class MatchObject : MatchObjectBase
 
     public void ScaleUp()
     {
-        transform.DOScale(Vector3.one*.92f,.2f);
+        transform.DOScale(Vector3.one * .92f, .2f);
     }
 
     public void ScaleDown()
@@ -82,19 +85,36 @@ public class MatchObject : MatchObjectBase
         transform.DOScale(orgScale, .2f);
     }
 
+    private Tween scaleTween;
     public void ScaleEffect(float time)
     {
-        StartCoroutine(ScaleEffectCo(time));
+        if (scaleTween != null && scaleTween.IsActive() && !scaleTween.IsComplete())
+        {
+            scaleTween?.Kill();
+        }
+        
+        scaleTween = transform.DOScale(orgScale * 1.2f, .1f).SetDelay(time).OnComplete((() =>
+        {
+            transform.DOScale(orgScale, .1f);
+        }));
+        
+        //scaleTween = transform.DOScale(orgScale * .92f, .1f).SetLoops(2, LoopType.Yoyo).OnKill(() => transform.localScale = orgScale);
     }
 
-    IEnumerator ScaleEffectCo(float time)
+    public void CollapseEffect()
     {
-        yield return new WaitForSeconds(time);
-        
-        transform.DOScale(Vector3.one*.92f,.2f).OnComplete((() =>
+        scaleTween = transform.DOScale(collapseScale, .1f).OnComplete((() =>
         {
-            transform.DOScale(orgScale, .2f);
-
+            transform.DOScale(orgScale, .1f);
         }));
+    }
+    public void Move(Vector3 pos)
+    {
+        matchObjectCollider.enabled = false;
+        transform.DOMove(pos, .175f).OnComplete(() =>
+        {
+            Destroy(gameObject);
+            MatchManager.Instance.canSelect = true;
+        });
     }
 }

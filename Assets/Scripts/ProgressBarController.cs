@@ -54,7 +54,7 @@ public class ProgressBarController : MonoBehaviour
 
     private void LevelUp()
     {
-        pastlevelValue += levelIndex;
+        pastlevelValue = levelIndex + 1;
         nextlevelValue = pastlevelValue + 1;
         
         pastLevel.text = pastlevelValue.ToString();

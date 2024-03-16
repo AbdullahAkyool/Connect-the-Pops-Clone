@@ -127,7 +127,7 @@ public class MatchManager : MonoBehaviour
                 matchObject.Move(lastObjectPos);
             }
 
-            matchObjects[^1].ChangeIdentity(currentMatcObjectSo,.2f);
+            matchObjects[^1].ChangeIdentity(currentMatcObjectSo,.2f); // the match object can currently take up to a maximum of 512 number values because it's in a test phase
             matchObjects.Clear();
             ActionManager.Instance.OnProgressBarFilled?.Invoke(10);
         }

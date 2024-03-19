@@ -1,3 +1,3 @@
 # Connect-the-Pops-Clone
 
-Test APK: rb.gy/j4ziot
+Test APK: http://rb.gy/j4ziot

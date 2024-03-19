@@ -7,9 +7,13 @@ using DG.Tweening;
 
 public class TotalMatchObject : MatchObjectBase
 {
-    protected override void Start()
+    private void OnEnable()
     {
-        base.Start();
         ActionManager.Instance.OnTotalMatchObjectIdentityChange += ChangeIdentity;
+    }
+
+    private void OnDisable()
+    {
+        ActionManager.Instance.OnTotalMatchObjectIdentityChange -= ChangeIdentity;
     }
 }

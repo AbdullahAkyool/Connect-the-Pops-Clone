@@ -19,10 +19,18 @@ public class ProgressBarController : MonoBehaviour
     private int pastlevelValue;
     private int nextlevelValue;
 
-    private void Start()
+    private void OnEnable()
     {
         ActionManager.Instance.OnProgressBarFilled += FillProgressBar;
+    }
 
+    private void OnDisable()
+    {
+        ActionManager.Instance.OnProgressBarFilled -= FillProgressBar;
+    }
+
+    private void Start()
+    {
         levelIndex = 1;
         LevelUp();
     }

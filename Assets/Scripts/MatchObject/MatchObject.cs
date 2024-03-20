@@ -10,12 +10,16 @@ using UnityEngine;
 public class MatchObject : MatchObjectBase
 {
     public MatcObjectSO matchObjectSO;
+    
     [Header("Object Interaction")] 
     private Vector3 orgScale;
     private Vector3 collapseScale;
-    public List<MatchObject> MatchObjectsAround = new List<MatchObject>();
     public LineRenderer objectLine;
     private Collider2D matchObjectCollider;
+    
+    public List<MatchObject> MatchObjectsAround = new List<MatchObject>();
+    private static Collider2D[] aroundHits = new Collider2D[10];
+    
     protected override void Start()
     {
         base.Start();
@@ -24,15 +28,16 @@ public class MatchObject : MatchObjectBase
         matchObjectCollider = GetComponent<Collider2D>();
     }
 
-    public void CheckMatchObjectsAround()
+    public void CheckMatchObjectsAround()  //grid system can be used to find other objects around the match object that it can match. suitable objects can be found by making queries in neighbouring cells
     {
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, 1.1f);
-
+        int count = Physics2D.OverlapCircleNonAlloc(transform.position, 0.9f, aroundHits);
         MatchObjectsAround.Clear();
 
-        foreach (var hit in hits)
+        for (int i = 0; i < count; i++)
         {
-            if (hit.gameObject.TryGetComponent(out MatchObject hitObject) && hit.gameObject != gameObject)
+            Collider2D hit = aroundHits[i];
+            
+            if (hit.gameObject != gameObject && hit.gameObject.TryGetComponent(out MatchObject hitObject))
             {
                 if (!MatchObjectsAround.Contains(hitObject) && (int)hitObject.objectValue == (int)objectValue)
                 {
@@ -40,12 +45,28 @@ public class MatchObject : MatchObjectBase
                 }
             }
         }
+        
+        
+        // Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, .9f);
+        //
+        // MatchObjectsAround.Clear();
+        //
+        // foreach (var hit in hits)
+        // {
+        //     if (hit.gameObject.TryGetComponent(out MatchObject hitObject) && hit.gameObject != gameObject)
+        //     {
+        //         if (!MatchObjectsAround.Contains(hitObject) && (int)hitObject.objectValue == (int)objectValue)
+        //         {
+        //             MatchObjectsAround.Add(hitObject);
+        //         }
+        //     }
+        // }
     }
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, 1.1f);
+        Gizmos.DrawWireSphere(transform.position, .9f);
     }
 
     protected override IEnumerator ChangeIdentityCo(MatcObjectSO matchObjectSo, float time)

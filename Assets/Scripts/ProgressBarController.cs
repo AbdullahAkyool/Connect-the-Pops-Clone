@@ -60,7 +60,7 @@ public class ProgressBarController : MonoBehaviour
         progressBar.DOFillAmount(value, .3f).SetEase(ease).SetId(progressBar);
     }
 
-    private void LevelUp()
+    private void LevelUp() //the level system is only here temporarily. a more advanced and optimised level system will be written once the testing phase is over
     {
         pastlevelValue = levelIndex;
         nextlevelValue = pastlevelValue + 1;

@@ -9,7 +9,10 @@ public class TotalMatchObject : MatchObjectBase
 {
     private void OnEnable()
     {
-        ActionManager.Instance.OnTotalMatchObjectIdentityChange += ChangeIdentity;
+        if (ActionManager.Instance != null)
+        {
+            ActionManager.Instance.OnTotalMatchObjectIdentityChange += ChangeIdentity;
+        }
     }
 
     private void OnDisable()

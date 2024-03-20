@@ -13,9 +13,8 @@ public class GridManager : MonoBehaviour
     public int width;
     public int height;
     public CellController cellPrefab;
-    private CellController[,] grid;
+    private CellController[,] _grid;
     public Transform originPoint;
-    private MatchObject currentTopMatchObject;
     private void Awake()
     {
         Instance = this;
@@ -28,7 +27,7 @@ public class GridManager : MonoBehaviour
     
     private void SpawnGrid()
     {
-        grid = new CellController[width, height];
+        _grid = new CellController[width, height];
 
         float maxLength = 4f; //grid scale
         
@@ -44,7 +43,7 @@ public class GridManager : MonoBehaviour
                 var pos =originPoint.position + Vector3.up * (j - offsetX) * space + Vector3.right * (i - offsetY) * space;
                 var newCell = Instantiate(cellPrefab, transform);
                 newCell.name = "(" + i + "," + j + ")";
-                grid[i, j] = newCell;
+                _grid[i, j] = newCell;
 
                 newCell.transform.position = pos;
             }
@@ -85,15 +84,15 @@ public class GridManager : MonoBehaviour
         {
             for (int y = height - 1; y >= 0; y--) // scan the grid from the bottom to the top
             {
-                if (grid[x, y].transform.childCount == 0)
+                if (_grid[x, y].transform.childCount == 0)
                 {
                     int emptyY = y;
                     for (int searchY = y + 1; searchY < height; searchY++)
                     {
-                        if (grid[x, searchY].transform.childCount >= 1)
+                        if (_grid[x, searchY].transform.childCount >= 1)
                         {
-                            var emptyCell = grid[x, emptyY];
-                            var obj = grid[x, searchY].transform.GetChild(0);
+                            var emptyCell = _grid[x, emptyY];
+                            var obj = _grid[x, searchY].transform.GetChild(0);
 
                             obj.parent = emptyCell.transform;
                             
@@ -121,9 +120,9 @@ public class GridManager : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                if (grid[x, y].transform.childCount == 0)
+                if (_grid[x, y].transform.childCount == 0)
                 {
-                    grid[x, y].InitializeRandomMatchObject();
+                    _grid[x, y].InitializeRandomMatchObject();
                 }
             }
         }

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5f53f458b526a44c9fbf433633e20b1, type: 3}
   m_Name: Object-2048
   m_EditorClassIdentifier: 
-  matchObjectValue: 1024
-  matchObjectColor: {r: 0.69257534, g: 0.5641509, b: 1, a: 1}
+  matchObjectValue: 2048
+  matchObjectColor: {r: 1, g: 0.3695271, b: 0.1716981, a: 1}

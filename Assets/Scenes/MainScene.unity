@@ -1179,6 +1179,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9abdda5eb9ff0134c8e5c3e0c03dbbc0, type: 2}
   - {fileID: 11400000, guid: 90250e75540e2c24aa8d05e06f839d7b, type: 2}
   - {fileID: 11400000, guid: 54802daaba382c04b9e0ffd93caed18a, type: 2}
+  - {fileID: 11400000, guid: 130be25c92648db41a2aca9e40c55db2, type: 2}
+  - {fileID: 11400000, guid: 3d53e8b804304c1429e5616537b41f3f, type: 2}
   canSelect: 1
 --- !u!4 &1996329072
 Transform:
